@@ -18,6 +18,7 @@ app.use(
   })
 );
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(apiRateLimit);
 app.use(express.json({ limit: "64kb" }));
 app.use(express.urlencoded({ extended: false }));

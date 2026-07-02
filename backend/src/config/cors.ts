@@ -1,25 +1,10 @@
 import type { CorsOptions } from "cors";
 
-const defaultAllowedOrigins = [
+const allowedOrigins = [
   "http://localhost:5173",
-  "http://localhost:4173"
+  "http://localhost:4173",
+  "https://landing-page-frontend-seven.vercel.app"
 ];
-
-const envAllowedOrigins = (process.env.FRONTEND_URL ?? "")
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter(Boolean);
-
-const allowedOrigins = new Set([...defaultAllowedOrigins, ...envAllowedOrigins]);
-
-function isAllowedVercelOrigin(origin: string) {
-  try {
-    const url = new URL(origin);
-    return url.hostname.endsWith(".vercel.app");
-  } catch {
-    return false;
-  }
-}
 
 export const corsOptions: CorsOptions = {
   origin(origin, callback) {
@@ -28,14 +13,20 @@ export const corsOptions: CorsOptions = {
       return;
     }
 
-    if (allowedOrigins.has(origin) || isAllowedVercelOrigin(origin)) {
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
       return;
     }
 
-    callback(new Error(`CORS blocked origin: ${origin}`));
+    if (origin.endsWith(".vercel.app")) {
+      callback(null, true);
+      return;
+    }
+
+    callback(null, false);
   },
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+  credentials: false,
+  optionsSuccessStatus: 204
 };
