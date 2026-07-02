@@ -12,13 +12,33 @@ import chatRoutes from "./routes/chat.routes.js";
 export const app = express();
 
 app.set("trust proxy", 1);
+
 app.use(
   helmet({
     crossOriginResourcePolicy: false
   })
 );
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+
+app.use((request, response, next) => {
+  const origin = request.headers.origin;
+
+  if (origin) {
+    response.setHeader("Access-Control-Allow-Origin", origin);
+    response.setHeader("Vary", "Origin");
+  }
+
+  response.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  response.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  response.setHeader("Access-Control-Max-Age", "86400");
+
+  if (request.method === "OPTIONS") {
+    response.status(204).end();
+    return;
+  }
+
+  next();
+});
+
 app.use(apiRateLimit);
 app.use(express.json({ limit: "64kb" }));
 app.use(express.urlencoded({ extended: false }));
