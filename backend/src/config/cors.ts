@@ -1,16 +1,41 @@
 import type { CorsOptions } from "cors";
-import { corsOrigins } from "./env.js";
+
+const defaultAllowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:4173"
+];
+
+const envAllowedOrigins = (process.env.FRONTEND_URL ?? "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const allowedOrigins = new Set([...defaultAllowedOrigins, ...envAllowedOrigins]);
+
+function isAllowedVercelOrigin(origin: string) {
+  try {
+    const url = new URL(origin);
+    return url.hostname.endsWith(".vercel.app");
+  } catch {
+    return false;
+  }
+}
 
 export const corsOptions: CorsOptions = {
   origin(origin, callback) {
-    if (!origin || corsOrigins.includes(origin)) {
+    if (!origin) {
       callback(null, true);
       return;
     }
 
-    callback(new Error("CORS origin is not allowed."));
+    if (allowedOrigins.has(origin) || isAllowedVercelOrigin(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error(`CORS blocked origin: ${origin}`));
   },
-  credentials: true,
   methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 };
