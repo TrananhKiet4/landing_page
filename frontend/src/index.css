@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --bg: 244 249 247;
+  --surface: 255 255 255;
+  --surface-strong: 233 244 241;
+  --text: 15 23 42;
+  --muted: 84 101 112;
+  --line: 178 203 197;
+  --accent: 14 165 160;
+  --accent-strong: 15 118 110;
+  --warm: 245 158 11;
+}
+
+html.dark {
+  color-scheme: dark;
+  --bg: 8 15 21;
+  --surface: 13 23 30;
+  --surface-strong: 18 34 41;
+  --text: 236 245 247;
+  --muted: 161 181 189;
+  --line: 60 82 91;
+  --accent: 45 212 191;
+  --accent-strong: 20 184 166;
+  --warm: 251 191 36;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 160, 0.16), transparent 30%),
+    radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 26%),
+    linear-gradient(180deg, rgb(var(--bg)) 0%, rgb(var(--surface-strong)) 100%);
+  color: rgb(var(--text));
+  font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 120px 120px;
+  opacity: 0.28;
+  mask-image: linear-gradient(180deg, black, transparent 85%);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+a,
+input {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: rgba(45, 212, 191, 0.28);
+}
+
+.section-shell {
+  width: min(1120px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.glass-panel {
+  background: linear-gradient(180deg, rgba(var(--surface), 0.9), rgba(var(--surface-strong), 0.82));
+  border: 1px solid rgba(var(--line), 0.5);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.12);
+  backdrop-filter: blur(18px);
+}
+
+.dark .glass-panel {
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.28);
+}
+
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(var(--line), 0.55);
+  background: rgba(var(--surface), 0.72);
+  padding: 0.5rem 0.85rem;
+  color: rgb(var(--muted));
+}
+
+.gradient-text {
+  background-image: linear-gradient(120deg, rgb(var(--accent)), rgb(var(--warm)));
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.device-halo {
+  background: radial-gradient(circle, rgba(45, 212, 191, 0.26), transparent 68%);
+}
+
+.section-anchor {
+  scroll-margin-top: 96px;
+}
